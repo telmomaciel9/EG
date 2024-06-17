@@ -1,0 +1,50 @@
+       GA = < GIC, A(X), RC(A), CC(p), RT(p) >
+
+GIC:
+p1 Sequencia : Sentido Intervalos
+p2 Sentido : '+'
+p3         | '-'
+p4 Intervalos : Intervalo
+p5 			  | Intervalos Intervalo
+p6 Intervalo : '[' NUM ',' NUM ']'
+
+ATR-S(Sequencia) = {sentido:int, valido:bool}
+ 
+ATR-S(Sentido) = {sentido: int}
+
+ATR-S(Intervalos) = {validoOUT:bool}
+ATR-H(Intervalos) = {valido:bool}
+
+ATR-S(Intervalo) = {validoOUT:bool}
+ATR-H(Intervalo)  = {valido:bool}
+
+ATR-S(NUM) = {val:int}
+
+RC(p1):
+	sentido(Sequencia) = sentido(Sentido)
+	valido(Sequencia) = valido(Intervalos)
+
+RC(p2):
+	sentido(Sentido) = 1
+
+RC(p3):
+	sentido(Sentido) = -1
+
+RC(p4):
+	valido(Intervalo) = valido(Intervalos)
+	validoOUT(Intervalos) = validoOUT(Intervalo)
+
+RC(p5):
+	valido(Intervalos[1]) = valido(Intervalos[0])
+	valido(Intervalo) = valido(Intervalos[1])
+	validoOUT(Intervalos[0]) = validoOUT(Intervalo)
+
+RC(p6):
+se sentido(Sequencia) = 1
+	se Intervalo[1] > Intervalo[3] entao valido(Intervalo)=False
+	
+se sentido(Sequencia) = -1
+	se Intervalo[1] < Intervalo[3] entao valido(Intervalo)=False
+
+
+RT(p1): print(sentido(Sequencia))
